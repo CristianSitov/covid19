@@ -27,8 +27,9 @@ Route::get('/covid19/covid.json', function () {
     $csv = Reader::createFromPath(storage_path('app') . DIRECTORY_SEPARATOR . $name);
     $csv->setHeaderOffset(0);
 
+    $days = 30;
     $records = collect($csv->getRecords());
-    $header = range(0, 25);
+    $header = range(0, $days);
 
     $byCountry = $records
         ->groupBy('Country/Region')
@@ -38,7 +39,7 @@ Route::get('/covid19/covid.json', function () {
                     return collect(array_slice($subrow, 4));
                 });
         })
-        ->map(static function ($row) {
+        ->map(static function ($row) use ($days) {
             $keys = $row->first()->keys();
             $ret = [];
 
@@ -48,7 +49,7 @@ Route::get('/covid19/covid.json', function () {
 
             return collect($ret)->filter(static function ($value, $key) {
                 return $value > 100 && $value < 50000;
-            })->take(25)->values();
+            })->take($days)->values();
         })
         ->transform(static function ($item, $key) {
             return [
@@ -61,7 +62,7 @@ Route::get('/covid19/covid.json', function () {
         })
         ->sortByDesc('last')
         ->filter(static function ($value, $key) {
-            return count($value['data']) > 0 && $value['data']->last() > 500;
+            return count($value['data']) > 0 && $value['data']->last() > 350;
         })
         ->values();
 
