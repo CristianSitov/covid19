@@ -32,7 +32,9 @@ Route::get('/covid19/covid.json', function () {
     $csv = Reader::createFromPath(storage_path('app') . DIRECTORY_SEPARATOR . $name);
     $csv->setHeaderOffset(0);
 
-    $days = 30;
+    $days = 35;
+    $startFrom = 1000;
+    $endAt = 80000;
     $records = collect($csv->getRecords());
     $header = range(0, $days);
 
@@ -45,7 +47,7 @@ Route::get('/covid19/covid.json', function () {
                     return collect(array_slice($subrow, 4));
                 });
         })
-        ->map(static function ($row) use ($days) {
+        ->map(static function ($row) use ($days, $startFrom, $endAt) {
             $keys = $row->first()->keys();
             $ret = [];
 
@@ -53,12 +55,12 @@ Route::get('/covid19/covid.json', function () {
                 $ret[$key] = $row->sum($key);
             }
 
-            return collect($ret)->filter(static function ($value, $key) {
-                return $value > 100 && $value < 50000;
+            return collect($ret)->filter(static function ($value, $key) use ($startFrom, $endAt) {
+                return $value > $startFrom && $value < $endAt;
             })
-                ->take($days)
-                ->values();
+                ->take($days);
         })
+        ->filter()
         ->transform(static function ($item, $key) {
             return [
                 'label' => $key . " (".$item->values()->last().")",
