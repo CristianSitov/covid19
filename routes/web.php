@@ -14,8 +14,13 @@ use League\Csv\Reader;
 |
 */
 
-Route::get('/covid19', function () {
+
+Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/covid19', function () {
+    return view('covid19');
 });
 
 Route::get('/covid19/covid.json', function () {
