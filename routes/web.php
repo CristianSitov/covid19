@@ -39,6 +39,7 @@ Route::get('/covid19/covid.json', function () {
     $byCountry = $records
         ->groupBy('Country/Region')
         ->map(static function ($row) {
+            // cut off meta data
             return $row
                 ->map(static function ($subrow) {
                     return collect(array_slice($subrow, 4));
@@ -54,7 +55,9 @@ Route::get('/covid19/covid.json', function () {
 
             return collect($ret)->filter(static function ($value, $key) {
                 return $value > 100 && $value < 50000;
-            })->take($days)->values();
+            })
+                ->take($days)
+                ->values();
         })
         ->transform(static function ($item, $key) {
             return [
@@ -69,7 +72,8 @@ Route::get('/covid19/covid.json', function () {
         ->filter(static function ($value, $key) {
             return count($value['data']) > 0 && $value['data']->last() > 350;
         })
-        ->values();
+        ->values()
+    ;
 
     return [
         'labels' => $header,
