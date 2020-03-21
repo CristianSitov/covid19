@@ -14,11 +14,11 @@ use League\Csv\Reader;
 |
 */
 
-Route::get('/', function () {
+Route::get('/covid19', function () {
     return view('welcome');
 });
 
-Route::get('/covid.json', function () {
+Route::get('/covid19/covid.json', function () {
     $url = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv";
     $contents = file_get_contents($url);
     $name = substr($url, strrpos($url, '/') + 1);

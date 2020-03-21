@@ -38,7 +38,7 @@
     }
     function getChartData() {
         $.ajax({
-            url: window.location.origin + "/covid.json",
+            url: window.location.origin + "/covid19/covid.json",
             success: function (result) {
                 renderChart(result);
             },
