@@ -47,7 +47,7 @@ Route::get('/covid19/covid.json', function () {
             }
 
             return collect($ret)->filter(static function ($value, $key) {
-                return $value > 100 && $value < 40000;
+                return $value > 100 && $value < 50000;
             })->take(25)->values();
         })
         ->transform(static function ($item, $key) {
@@ -61,7 +61,7 @@ Route::get('/covid19/covid.json', function () {
         })
         ->sortByDesc('last')
         ->filter(static function ($value, $key) {
-            return count($value['data']) > 0 && $value['data']->last() > 750;
+            return count($value['data']) > 0 && $value['data']->last() > 500;
         })
         ->values();
 
