@@ -25,5 +25,4 @@ Route::get('/covid19/by-deaths', function () {
     return view('covid19.by_deaths');
 });
 
-Route::get('/covid19/by-total-cases.json', 'CovidController@byTotalCases');
-Route::get('/covid19/by-deaths.json', 'CovidController@byDeaths');
+Route::get('/covid19/covid.json', 'CovidController@dataJson');

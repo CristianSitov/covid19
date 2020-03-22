@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="container">
-    <h6>COVID 19</h6>
-    <a href="/covid19/">Projection by total cases</a>
-    <p class="small justify-content-start">Methodology: all countries having currently over 1000 registered cases, all offset to the day they passed 500 cases</p>
+    <a href="/covid19/">Switch to proj. by total cases</a>
+    <h6>COVID 19 - Proj. by deaths <span class="date"></span></h6>
+    <p class="small justify-content-start">Methodology: all countries having currently over 10 registered deaths, all offset to the day of the first case</p>
     <div class="chart-container">
         <canvas id="myChart" width="600" height="600"></canvas>
     </div>
@@ -33,7 +33,7 @@
     }
     function getChartData() {
         $.ajax({
-            url: window.location.origin + "/covid19/by-deaths.json",
+            url: window.location.origin + "/covid19/covid.json?type=Deaths&days=35&start_from=1&end_at=10000&cut_off=10",
             success: function (result) {
                 renderChart(result);
             },
