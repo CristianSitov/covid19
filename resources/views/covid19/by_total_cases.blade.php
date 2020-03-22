@@ -5,7 +5,7 @@
 @section('content')
 <div class="container">
     <a href="/covid19/by-deaths">Switch to proj. by deaths</a>
-    <h6>COVID 19 - Proj. by total cases <span class="date"></span></h6>
+    <h6>COVID 19 - Proj. by total cases <small>(<span class="date"></span>)</small></h6>
     <p class="small justify-content-start d-none d-lg-block">Methodology: all countries having currently over 1000 registered cases, all offset to the day they passed 500 cases</p>
     <div class="chart-container">
         <canvas id="myChart" width="600" height="600"></canvas>
@@ -36,6 +36,7 @@
             url: window.location.origin + "/covid19/covid.json?type=Confirmed&days=35&start_from=1000&end_at=80000&cut_off=350",
             success: function (result) {
                 renderChart(result);
+                $('.date').html(result.date);
             },
             error: function (err) {
             }
