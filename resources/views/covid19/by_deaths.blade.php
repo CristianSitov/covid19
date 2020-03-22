@@ -5,7 +5,7 @@
 @section('content')
 <div class="container">
     <h6>COVID 19</h6>
-    <a href="/covid19/by-deaths">Projection by total cases</a>
+    <a href="/covid19/">Projection by total cases</a>
     <p class="small justify-content-start">Methodology: all countries having currently over 1000 registered cases, all offset to the day they passed 500 cases</p>
     <div class="chart-container">
         <canvas id="myChart" width="600" height="600"></canvas>
