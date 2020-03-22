@@ -7,13 +7,18 @@
     <title>COVID19</title>
 
     <!-- Fonts -->
+    <link href="/css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.css" rel="stylesheet">
 
 </head>
 <body>
-<div class="chart-container">
-    <canvas id="myChart" width="600" height="600"></canvas>
+<div class="container">
+    <h6>COVID 19</h6>
+    <p class="small justify-content-start">Methodology: all countries having currently over 1000 registered cases, all offset to the day they passed 500 cases</p>
+    <div class="chart-container">
+        <canvas id="myChart" width="600" height="600"></canvas>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

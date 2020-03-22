@@ -52,7 +52,9 @@ Route::get('/covid19/covid.json', function () {
             $ret = [];
 
             foreach ($keys as $key) {
-                $ret[$key] = $row->sum($key);
+                $ret[$key] = $row->sum(static function ($val) use ($key) {
+                    return $val[$key] === "" ? 0 : $val[$key];
+                });
             }
 
             return collect($ret)->filter(static function ($value, $key) use ($startFrom, $endAt) {
