@@ -4,9 +4,8 @@
 
 @section('content')
 <div class="container">
-    <a href="/covid19/">Switch to proj. by total cases</a>
-    <h6>COVID 19 - Proj. by deaths <small>(<span class="date"></span>)</small></h6>
-    <p class="small justify-content-start">Methodology: all countries having currently over 10 registered deaths, all offset to the day of the first case</p>
+    <h6>COVID 19 <small>(data: <span class="date">____-__-__</span>)</small> | <a href="/covid19/">by cases</a></h6>
+    <h6>No. of deaths starting with the 1st deceased</h6>
     <div class="chart-container">
         <canvas id="myChart" width="600" height="600"></canvas>
     </div>
@@ -23,17 +22,21 @@
                 responsive: true,
                 scales: {
                     yAxes: [{
+                        beginAtZero: false,
                         ticks: {
                             display: false,
-                        }
+                        },
                     }]
                 },
+                legend: {
+                    display: false,
+                }
             }
         });
     }
     function getChartData() {
         $.ajax({
-            url: window.location.origin + "/covid19/covid.json?type=Deaths&days=35&start_from=1&end_at=10000&cut_off=10",
+            url: window.location.origin + "/covid19/covid.json?type=Deaths&days=45&start_from=0&end_at=10000&cut_off=10",
             success: function (result) {
                 renderChart(result);
                 $('.date').html(result.date);

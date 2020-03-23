@@ -38,13 +38,13 @@ class CovidController extends Controller
                     $keys = $row->first()->keys();
                     $ret = [];
 
-                    foreach ($keys as $key) {
+                    foreach ($keys as $k => $key) {
                         $ret[$key] = $row->sum(static function ($val) use ($key) {
                             return $val[$key] === "" ? 0 : $val[$key];
                         });
                     }
 
-                    return collect($ret)->filter(static function ($value, $key) use ($data) {
+                    return collect($ret)->filter(static function ($value) use ($data) {
                         return $value > (int) $data['start_from'] && $value < (int) $data['end_at'];
                     })
                         ->take($data['days']);

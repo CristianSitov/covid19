@@ -4,9 +4,8 @@
 
 @section('content')
 <div class="container">
-    <a href="/covid19/by-deaths">Switch to proj. by deaths</a>
-    <h6>COVID 19 - Proj. by total cases <small>(<span class="date"></span>)</small></h6>
-    <p class="small justify-content-start d-none d-lg-block">Methodology: all countries having currently over 1000 registered cases, all offset to the day they passed 500 cases</p>
+    <h6>COVID 19 <small>(data: <span class="date">____-__-__</span>)</small> | <a href="/covid19/by-deaths">by deaths</a></h6>
+    <h6>No. of cases starting with the 500th discovered case</h6>
     <div class="chart-container">
         <canvas id="myChart" width="600" height="600"></canvas>
     </div>
@@ -23,11 +22,15 @@
                 responsive: true,
                 scales: {
                     yAxes: [{
+                        beginAtZero: false,
                         ticks: {
                             display: false,
-                        }
+                        },
                     }]
                 },
+                legend: {
+                    display: false,
+                }
             }
         });
     }
