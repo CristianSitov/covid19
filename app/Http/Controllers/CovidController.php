@@ -12,12 +12,12 @@ class CovidController extends Controller
         $data = $request->all();
 
         $type = [
-            'cases' => 'Confirmed',
-            'world' => 'Confirmed',
-            'deaths' => 'Deaths',
+            'cases' => 'confirmed',
+            'world' => 'confirmed',
+            'deaths' => 'deaths',
         ];
 
-        $url = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-".$type[$data['type']].".csv";
+        $url = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_".$type[$data['type']]."_global.csv";
         $contents = file_get_contents($url);
         $name = substr($url, strrpos($url, '/') + 1);
         Storage::put($name, $contents);
