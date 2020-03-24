@@ -24,5 +24,8 @@ Route::get('/covid19', function () {
 Route::get('/covid19/by-deaths', function () {
     return view('covid19.by_deaths');
 });
+Route::get('/covid19/world', function () {
+    return view('covid19.world');
+});
 
 Route::get('/covid19/covid.json', 'CovidController@dataJson');

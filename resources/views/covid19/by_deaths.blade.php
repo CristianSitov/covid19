@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container">
-    <h6>COVID 19 <small>(data: <span class="date">____-__-__</span>)</small> | <a href="/covid19/">by cases</a></h6>
+    <h6>COVID 19 <small>(data: <span class="date">____-__-__</span>)</small> | <a href="/covid19/">by cases</a> | <a href="/covid19/world">world</a></h6>
     <h6>No. of deaths starting with the 1st deceased</h6>
     <div class="chart-container">
         <canvas id="myChart" width="600" height="600"></canvas>
@@ -36,7 +36,7 @@
     }
     function getChartData() {
         $.ajax({
-            url: window.location.origin + "/covid19/covid.json?type=Deaths&days=45&start_from=0&end_at=10000&cut_off=10",
+            url: window.location.origin + "/covid19/covid.json?type=deaths&days=45&start_from=0&end_at=10000&cut_off=10",
             success: function (result) {
                 renderChart(result);
                 $('.date').html(result.date);
