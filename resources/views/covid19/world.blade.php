@@ -37,7 +37,7 @@
     }
     function getChartData() {
         $.ajax({
-            url: window.location.origin + "/covid19/covid.json?type=world&days=35&start_from=0&end_at=80000&cut_off=0",
+            url: window.location.origin + "/covid19/covid.json?type=world&days=40",
             success: function (result) {
                 renderChart(result);
                 $('.date').html(result.date);

@@ -16,7 +16,8 @@
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
-        "league/csv": "^9.6"
+        "league/csv": "^9.6",
+        "symfony/dom-crawler": "^5.0"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

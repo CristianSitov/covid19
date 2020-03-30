@@ -39,9 +39,9 @@ class CovidController extends Controller
             });
 
         if ($data['type'] === 'world') {
-            $totals = $byCountry->pipe(static function ($collection) use ($data) {
+            $totals = $byCountry->pipe(static function ($collection) {
                 return $collection
-                    ->map(static function ($row) use ($data) {
+                    ->map(static function ($row) {
                         $keys = $row->first()->keys();
                         $ret = [];
 
@@ -87,6 +87,9 @@ class CovidController extends Controller
                         })
                             ->take($data['days']);
                     })
+//                    ->filter(static function ($item, $key) {
+//                        return in_array($key, ['US', 'China', 'Italy', 'Spain', 'Germany', 'France', 'Iran', 'Korea, South', 'Japan', 'Romania']);
+//                    })
                     ->transform(static function ($item, $key) {
                         return [
                             'label' => $key . " (".$item->values()->last().")",
