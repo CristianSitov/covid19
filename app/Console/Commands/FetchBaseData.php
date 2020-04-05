@@ -43,8 +43,10 @@ class FetchBaseData extends Command
      */
     public function handle()
     {
+        $this->info('Refreshing DB...');
         $this->call('migrate:fresh');
 
+        $this->info('Fetching Data...');
         $sourceJson = file_get_contents('https://opendata.ecdc.europa.eu/covid19/casedistribution/json/');
         $source = json_decode($sourceJson);
 

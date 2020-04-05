@@ -18,7 +18,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/covid19', function () {
+Route::get('/covid20', function () {
     return view('covid19/covid');
 });
 
