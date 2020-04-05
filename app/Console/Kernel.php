@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     {
          $schedule
              ->command('fetch:base')
-             ->everyThirtyMinutes();
+             ->everyTenMinutes();
     }
 
     /**
