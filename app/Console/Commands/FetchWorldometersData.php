@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
+use League\Csv\Reader;
 use Symfony\Component\DomCrawler\Crawler;
 
 class FetchWorldometersData extends Command
@@ -12,7 +14,7 @@ class FetchWorldometersData extends Command
      *
      * @var string
      */
-    protected $signature = 'fetch:data';
+    protected $signature = 'fetch:fresh';
 
     /**
      * The console command description.
