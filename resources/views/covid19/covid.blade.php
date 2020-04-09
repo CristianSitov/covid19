@@ -9,7 +9,8 @@
         <div id="chart-confirmed-reset" style="width: 100%; height: 600px;"></div>
         <div id="chart-deaths" style="width: 100%; height: 600px;"></div>
         <div id="chart-deaths-reset" style="width: 100%; height: 600px;"></div>
-        <div id="chart-r0-reset" style="width: 100%; height: 600px;"></div>
+        <div id="chart-daily" style="width: 100%; height: 600px;"></div>
+        <div id="chart-daily-reset" style="width: 100%; height: 600px;"></div>
     </div>
 
     <script>
@@ -62,18 +63,32 @@
                 error: function (err) {
                 }
             });
-            // $.ajax({
-            //     url: window.location.origin + "/covid19/covid.json?base=record&type=confirmed&mode=reset&start_from=0&current_over=3500&return=r0",
-            //     success: function (result) {
-            //         Plotly.newPlot(document.getElementById('chart-r0-reset'), result.data_sets, {
-            //             title: 'Deaths starting with 100th, aligned',
-            //         }, {
-            //             responsive: true
-            //         });
-            //     },
-            //     error: function (err) {
-            //     }
-            // });
+            $.ajax({
+                url: window.location.origin + "/covid19/covid.json?base=daily&type=confirmed&mode=normal&start_from=10&current_over=300",
+                success: function (result) {
+                    Plotly.newPlot(document.getElementById('chart-daily'), result.data_sets, {
+                        title: 'Confirmed per day (had at least 300/day), timeline',
+                        // barmode: 'stack'
+                    }, {
+                        responsive: true
+                    });
+                },
+                error: function (err) {
+                }
+            });
+            $.ajax({
+                url: window.location.origin + "/covid19/covid.json?base=daily&type=confirmed&mode=reset&start_from=0&current_over=300",
+                success: function (result) {
+                    Plotly.newPlot(document.getElementById('chart-daily-reset'), result.data_sets, {
+                        title: 'Confirmed per day (had at least 300/day), reset',
+                        barmode: 'stack'
+                    }, {
+                        responsive: true
+                    });
+                },
+                error: function (err) {
+                }
+            });
         });
     </script>
 @endsection

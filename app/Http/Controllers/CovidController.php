@@ -90,28 +90,44 @@ class CovidController extends Controller
                 ->reject(static function ($item) use ($data) {
                     return $item['max_value'] < (int)$data['current_over'];
                 });
-        } elseif ($data['base'] === 'daily') {
+        }
+        elseif ($data['base'] === 'daily') {
             $records = $records
                 ->map(static function ($row) use ($data) {
                     $country = $row->first()['country'];
                     $max_value = (int)$row->last()[$data['type']];
                     $values = $row
-                        ->map(static function ($item, $k) use ($data) {
-                            return (int)$item[$data['type']];
-                        })
-                        ->reject(static function ($item) use ($data) {
-                            return $item < $data['start_from'];
+                        ->mapWithKeys(static function ($item) use ($data) {
+                            return [$item['capture_date'] => (int) $item[$data['type']]];
                         });
 
-                    return [
-                        'y' => $values->values(),
-                        'x' => $values->keys(),
-                        'line' => [
-                            'shape' => 'spline',
-                        ],
+                    $cnt = 0;
+                    $values->each(static function ($item, $key) use ($data, &$cnt) {
+                        if ($item > $data['start_from']) {
+                            $cnt = $key;
+                            return false;
+                        }
+                    });
+                    $values = $values->splice($values->keys()->search($cnt));
+
+                    $y = $values->values();
+                    $options = [];
+                    if ($data['mode'] === 'reset') {
+                        $x = $y->keys();
+                    } else {
+                        $x = $values->keys();
+                    }
+
+                    return $options + [
+                        'x' => $x,
+                        'y' => $y,
+                        'type' => $data['mode'] === 'normal' ? 'scatter' : 'bar',
                         'name' => $country,
                         'max_value' => $max_value
                     ];
+                })
+                ->reject(static function ($item) use ($data) {
+                    return $item['max_value'] < (int)$data['current_over'];
                 });
         }
 
