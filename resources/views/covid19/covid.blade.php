@@ -9,8 +9,10 @@
         <div id="chart-confirmed-reset" style="width: 100%; height: 600px;"></div>
         <div id="chart-deaths" style="width: 100%; height: 600px;"></div>
         <div id="chart-deaths-reset" style="width: 100%; height: 600px;"></div>
-        <div id="chart-daily" style="width: 100%; height: 600px;"></div>
-        <div id="chart-daily-reset" style="width: 100%; height: 600px;"></div>
+        <div id="chart-confirmed-daily" style="width: 100%; height: 600px;"></div>
+        <div id="chart-confirmed-daily-reset" style="width: 100%; height: 600px;"></div>
+        <div id="chart-deaths-daily" style="width: 100%; height: 600px;"></div>
+        <div id="chart-deaths-daily-reset" style="width: 100%; height: 600px;"></div>
     </div>
 
     <script>
@@ -66,7 +68,7 @@
             $.ajax({
                 url: window.location.origin + "/covid19/covid.json?base=daily&type=confirmed&mode=normal&start_from=10&current_over=300",
                 success: function (result) {
-                    Plotly.newPlot(document.getElementById('chart-daily'), result.data_sets, {
+                    Plotly.newPlot(document.getElementById('chart-confirmed-daily'), result.data_sets, {
                         title: 'Confirmed per day (had at least 300/day), timeline',
                         // barmode: 'stack'
                     }, {
@@ -79,8 +81,34 @@
             $.ajax({
                 url: window.location.origin + "/covid19/covid.json?base=daily&type=confirmed&mode=reset&start_from=0&current_over=300",
                 success: function (result) {
-                    Plotly.newPlot(document.getElementById('chart-daily-reset'), result.data_sets, {
+                    Plotly.newPlot(document.getElementById('chart-confirmed-daily-reset'), result.data_sets, {
                         title: 'Confirmed per day (had at least 300/day), reset',
+                        barmode: 'stack'
+                    }, {
+                        responsive: true
+                    });
+                },
+                error: function (err) {
+                }
+            });
+            $.ajax({
+                url: window.location.origin + "/covid19/covid.json?base=daily&type=deaths&mode=normal&start_from=10&current_over=25",
+                success: function (result) {
+                    Plotly.newPlot(document.getElementById('chart-deaths-daily'), result.data_sets, {
+                        title: 'Deaths per day (had at least 25/day), timeline',
+                        // barmode: 'stack'
+                    }, {
+                        responsive: true
+                    });
+                },
+                error: function (err) {
+                }
+            });
+            $.ajax({
+                url: window.location.origin + "/covid19/covid.json?base=daily&type=deaths&mode=reset&start_from=0&current_over=25",
+                success: function (result) {
+                    Plotly.newPlot(document.getElementById('chart-deaths-daily-reset'), result.data_sets, {
+                        title: 'Deaths per day (had at least 25/day), reset',
                         barmode: 'stack'
                     }, {
                         responsive: true
