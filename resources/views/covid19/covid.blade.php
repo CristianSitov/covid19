@@ -92,10 +92,10 @@
                 }
             });
             $.ajax({
-                url: window.location.origin + "/covid19/covid.json?base=daily&type=deaths&mode=normal&start_from=10&current_over=25",
+                url: window.location.origin + "/covid19/covid.json?base=daily&type=deaths&mode=normal&start_from=10&current_over=35",
                 success: function (result) {
                     Plotly.newPlot(document.getElementById('chart-deaths-daily'), result.data_sets, {
-                        title: 'Deaths per day (had at least 25/day), timeline',
+                        title: 'Deaths per day (had at least 35/day), timeline',
                         // barmode: 'stack'
                     }, {
                         responsive: true
@@ -105,10 +105,10 @@
                 }
             });
             $.ajax({
-                url: window.location.origin + "/covid19/covid.json?base=daily&type=deaths&mode=reset&start_from=0&current_over=25",
+                url: window.location.origin + "/covid19/covid.json?base=daily&type=deaths&mode=reset&start_from=0&current_over=35",
                 success: function (result) {
                     Plotly.newPlot(document.getElementById('chart-deaths-daily-reset'), result.data_sets, {
-                        title: 'Deaths per day (had at least 25/day), reset',
+                        title: 'Deaths per day (had at least 35/day), reset',
                         barmode: 'stack'
                     }, {
                         responsive: true

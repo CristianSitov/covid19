@@ -95,7 +95,7 @@ class CovidController extends Controller
             $records = $records
                 ->map(static function ($row) use ($data) {
                     $country = $row->first()['country'];
-                    $max_value = (int)$row->last()[$data['type']];
+                    $max_value = (int)$row->max($data['type']);
                     $values = $row
                         ->mapWithKeys(static function ($item) use ($data) {
                             return [$item['capture_date'] => (int) $item[$data['type']]];
