@@ -44,7 +44,7 @@ class FetchBaseData extends Command
     public function handle()
     {
         $this->info('Refreshing DB...');
-        $this->call('migrate:fresh');
+//        $this->call('migrate:fresh');
 
         $this->info('Fetching Data...');
         $sourceJson = file_get_contents('https://opendata.ecdc.europa.eu/covid19/casedistribution/json/');
@@ -57,12 +57,13 @@ class FetchBaseData extends Command
 
         foreach ($source->records as $row) {
 
-            Record::create([
+            Record::updateOrCreate([
                 'capture_date' => Carbon::createFromFormat('d/m/Y', $row->dateRep)->toDateString(),
                 'country' => $row->countriesAndTerritories,
+                'population' => $row->popData2018,
+            ], [
                 'confirmed' => $row->cases,
                 'deaths' => $row->deaths,
-                'population' => $row->popData2018,
             ]);
 
             $bar->advance();
