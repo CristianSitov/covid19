@@ -9,6 +9,7 @@ use DatePeriod;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use League\Csv\Reader;
 
 class CovidController extends Controller
@@ -23,7 +24,57 @@ class CovidController extends Controller
 
         $last_date = $records->first()->last()['capture_date'];
 
-        if ($data['base'] === 'record') {
+        if ($data['base'] === 'totals') {
+            if ($data['mode'] === 'normal') {
+                $records = $records
+                    ->map(static function ($record) use ($data) {
+                        return $record->sum($data['type']);
+                    })
+                    ->sortDesc()
+                    ->filter(function ($value, $key) use ($data) {
+                        return $value > $data['current_over'];
+                    });
+            } elseif ($data['mode'] === 'million') {
+                $records = $records
+                    ->reject(static function ($item) use ($data) {
+                        $sum = $item->sum($data['type']);
+                        return $sum === 0 ||
+                            $sum < (int)$data['current_over'];
+                    })
+                    ->reject(static function ($item) {
+                        return $item->first()->population == 0 ||
+                            $item->first()->population == "" ||
+                            Str::startsWith($item->first()->country, 'Cases');
+                    })
+                    ->map(static function ($record) use ($data) {
+                        return [
+                            $data['type'] => (int) (($record->sum($data['type']) * 1000 * 1000) / (int)$record->first()->population),
+                            'max_value' => $record->sum($data['type'])
+                        ];
+                    })
+                    ->sortDesc()
+                ;
+            }
+            $x = $records->keys();
+            if ($data['mode'] === 'normal') {
+                $y = $records->values();
+            } else {
+                $y = $records->values()->pluck($data['type']);
+            }
+
+            $records = collect([
+                [
+                    'x' => $x,
+                    'y' => $y,
+                    'type' => 'bar',
+                    'marker' => [
+                        'color' => $records->keys()->map(static function ($value) {
+                            return '#' . substr(md5($value), 0, 6);
+                        })
+                    ]
+                ]
+            ]);
+        } elseif ($data['base'] === 'record') {
             $records = $records
                 ->map(static function ($record) use ($data) {
                     $country = $record->first()['country'];
@@ -90,15 +141,19 @@ class CovidController extends Controller
                 ->reject(static function ($item) use ($data) {
                     return $item['max_value'] < (int)$data['current_over'];
                 });
-        }
-        elseif ($data['base'] === 'daily') {
+
+            $records = $records
+                ->sortByDesc('max_value')
+                ->except(['max_value'])
+                ->values();
+        } elseif ($data['base'] === 'daily') {
             $records = $records
                 ->map(static function ($row) use ($data) {
                     $country = $row->first()['country'];
                     $max_value = (int)$row->max($data['type']);
                     $values = $row
                         ->mapWithKeys(static function ($item) use ($data) {
-                            return [$item['capture_date'] => (int) $item[$data['type']]];
+                            return [$item['capture_date'] => (int)$item[$data['type']]];
                         });
 
                     $cnt = 0;
@@ -119,22 +174,23 @@ class CovidController extends Controller
                     }
 
                     return $options + [
-                        'x' => $x,
-                        'y' => $y,
-                        'type' => $data['mode'] === 'normal' ? 'scatter' : 'bar',
-                        'name' => $country,
-                        'max_value' => $max_value
-                    ];
+                            'x' => $x,
+                            'y' => $y,
+                            'type' => $data['mode'] === 'normal' ? 'scatter' : 'bar',
+                            'name' => $country,
+                            'max_value' => $max_value
+                        ];
                 })
                 ->reject(static function ($item) use ($data) {
                     return $item['max_value'] < (int)$data['current_over'];
                 });
-        }
 
-        $records = $records
-            ->sortByDesc('max_value')
-            ->except(['max_value'])
-            ->values();
+            $records = $records
+                ->sortByDesc('max_value')
+                ->except(['max_value'])
+                ->values();
+
+        }
 
         return [
             'data_sets' => $records->toArray(),
