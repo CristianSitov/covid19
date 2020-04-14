@@ -7,7 +7,8 @@
         <h5>COVID 19</h5>
         <div id="chart-totals-confirmed" style="width: 100%; height: 600px;"></div>
         <div id="chart-totals-deaths" style="width: 100%; height: 600px;"></div>
-        <div id="chart-ratios-million" style="width: 100%; height: 600px;"></div>
+        <div id="chart-ratios-confirmed-million" style="width: 100%; height: 600px;"></div>
+        <div id="chart-ratios-deaths-million" style="width: 100%; height: 600px;"></div>
         <div id="chart-confirmed" style="width: 100%; height: 600px;"></div>
         <div id="chart-confirmed-reset" style="width: 100%; height: 600px;"></div>
         <div id="chart-deaths" style="width: 100%; height: 600px;"></div>
@@ -49,8 +50,21 @@
             $.ajax({
                 url: window.location.origin + "/covid19/covid.json?base=totals&type=confirmed&mode=million&start_from=0&current_over=6000",
                 success: function (result) {
-                    Plotly.newPlot(document.getElementById('chart-ratios-million'), result.data_sets, {
-                        title: 'Top countries by deaths per million, over 300',
+                    Plotly.newPlot(document.getElementById('chart-ratios-confirmed-million'), result.data_sets, {
+                        title: 'Top countries by confirmed per million, over 6000',
+                        barmode: 'stack'
+                    }, {
+                        responsive: true
+                    });
+                },
+                error: function (err) {
+                }
+            });
+            $.ajax({
+                url: window.location.origin + "/covid19/covid.json?base=totals&type=deaths&mode=million&start_from=0&current_over=500",
+                success: function (result) {
+                    Plotly.newPlot(document.getElementById('chart-ratios-deaths-million'), result.data_sets, {
+                        title: 'Top countries by deaths per million, over 500',
                         barmode: 'stack'
                     }, {
                         responsive: true
