@@ -18,7 +18,11 @@ class CovidController extends Controller
     {
         $data = $request->all();
 
-        $records = Record::orderBy('capture_date', 'ASC')
+        $records = Record::orderBy('capture_date', 'ASC');
+        if (isset($data['country'])) {
+            $records->where('country', '=', $data['country']);
+        }
+        $records = $records
             ->get()
             ->groupBy('country');
 
@@ -26,12 +30,23 @@ class CovidController extends Controller
 
         if ($data['base'] === 'totals') {
             if ($data['mode'] === 'normal') {
+                if ($data['type'] === 'confirmed') {
+                    $records = $records
+                        ->map(static function ($record) use ($data) {
+                            return $record->last()['totals_confirmed'];
+                        });
+                }
+
+                if ($data['type'] === 'deaths') {
+                    $records = $records
+                        ->map(static function ($record) use ($data) {
+                            return $record->last()['totals_deaths'];
+                        });
+                }
+
                 $records = $records
-                    ->map(static function ($record) use ($data) {
-                        return $record->sum($data['type']);
-                    })
                     ->sortDesc()
-                    ->filter(function ($value, $key) use ($data) {
+                    ->filter(function ($value) use ($data) {
                         return $value > $data['current_over'];
                     });
             } elseif ($data['mode'] === 'million') {
@@ -48,12 +63,11 @@ class CovidController extends Controller
                     })
                     ->map(static function ($record) use ($data) {
                         return [
-                            $data['type'] => (int) (($record->sum($data['type']) * 1000 * 1000) / (int)$record->first()->population),
+                            $data['type'] => (int)(($record->sum($data['type']) * 1000 * 1000) / (int)$record->first()->population),
                             'max_value' => $record->sum($data['type'])
                         ];
                     })
-                    ->sortDesc()
-                ;
+                    ->sortDesc();
             }
             $x = $records->keys();
             if ($data['mode'] === 'normal') {
@@ -149,8 +163,6 @@ class CovidController extends Controller
         } elseif ($data['base'] === 'daily') {
             $records = $records
                 ->map(static function ($row) use ($data) {
-                    $country = $row->first()['country'];
-                    $max_value = (int)$row->max($data['type']);
                     $values = $row
                         ->mapWithKeys(static function ($item) use ($data) {
                             return [$item['capture_date'] => (int)$item[$data['type']]];
@@ -176,9 +188,10 @@ class CovidController extends Controller
                     return $options + [
                             'x' => $x,
                             'y' => $y,
-                            'type' => $data['mode'] === 'normal' ? 'scatter' : 'bar',
-                            'name' => $country,
-                            'max_value' => $max_value
+                            'type' => 'scatter',
+                            'mode' => 'lines+markers',
+                            'name' => $row->first()['country'],
+                            'max_value' => (int)$row->max($data['type'])
                         ];
                 })
                 ->reject(static function ($item) use ($data) {

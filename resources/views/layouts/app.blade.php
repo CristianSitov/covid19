@@ -10,10 +10,16 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
-{{--    <link href="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.css" rel="stylesheet">--}}
+    <style>
+        .container .chart {
+            height: 600px;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+    </style>
+
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-{{--    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.js"></script>--}}
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 </head>

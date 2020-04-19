@@ -18,8 +18,16 @@ class CreateRecordsTable extends Migration
             $table->date('capture_date');
             $table->string('country');
             $table->integer('confirmed');
+            $table->integer('totals_confirmed')->default(0);
+            $table->integer('avg3_confirmed')->default(0);
+            $table->integer('avg7_confirmed')->default(0);
             $table->integer('deaths');
+            $table->integer('totals_deaths')->default(0);
+            $table->integer('avg3_deaths')->default(0);
+            $table->integer('avg7_deaths')->default(0);
             $table->integer('population');
+            $table->integer('confirmed_million')->default(0);
+            $table->integer('deaths_million')->default(0);
             $table->timestamps();
         });
     }
